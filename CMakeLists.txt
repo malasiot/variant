@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-project(Variant VERSION 1.0.0 LANGUAGES CXX)
+project(variant VERSION 1.0.0 LANGUAGES CXX)
 
 option(VARIANT_BUILD_TESTS "Build the testing suite" ON)
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(variant INTERFACE)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
