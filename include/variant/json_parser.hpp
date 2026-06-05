@@ -1,7 +1,5 @@
 // json decoder
 
-#include <variant/variant.hpp>
-
 #include <regex>
 
 #include <fstream>

@@ -694,7 +694,8 @@ public:
         }
 
         const std::string& key() const {
-            if ( kind_ != ObjectType ) return std::string() ;
+            static std::string empty_key_ ;
+            if ( kind_ != ObjectType ) return empty_key_ ;
             else return map_it_->first;
         }
 
