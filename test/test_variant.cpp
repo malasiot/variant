@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <variant/variant.hpp>
-#include <variant/json_parser.hpp>
 
 class VariantTest : public ::testing::Test {
 protected:

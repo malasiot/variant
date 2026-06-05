@@ -1011,6 +1011,29 @@ public:
 
 };
 
+#include "json_parser.hpp"
+
+inline Variant Variant::fromJSONString(const std::string &src, bool throw_exception) {
+    detail::JSONParser parser(src) ;
+
+    Variant val ;
+    try {
+        parser.parse(val) ;
+        return val ;
+    }
+    catch ( JSONParseException &e ) {
+      //  cout << e.what() << endl ;
+        if ( throw_exception ) throw e ;
+        else return Variant() ;
+    }
+}
+
+inline Variant Variant::fromJSONFile(const string &path, bool throw_exception) {
+    std::ifstream t(path);
+    std::string str((std::istreambuf_iterator<char>(t)),
+                     std::istreambuf_iterator<char>());
+    return fromJSONString(str, throw_exception) ;
+}
 
 VARIANT_NAMESPACE_END
 
