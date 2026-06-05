@@ -1011,6 +1011,7 @@ public:
 
 };
 
+
 VARIANT_NAMESPACE_END
 
 #endif

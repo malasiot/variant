@@ -356,7 +356,7 @@ string JSONParser::unicodeToUTF8(unsigned int cp) {
 
 }
 
-Variant Variant::fromJSONString(const std::string &src, bool throw_exception) {
+inline Variant Variant::fromJSONString(const std::string &src, bool throw_exception) {
     detail::JSONParser parser(src) ;
 
     Variant val ;
@@ -371,7 +371,7 @@ Variant Variant::fromJSONString(const std::string &src, bool throw_exception) {
     }
 }
 
-Variant Variant::fromJSONFile(const string &path, bool throw_exception) {
+inline Variant Variant::fromJSONFile(const string &path, bool throw_exception) {
     std::ifstream t(path);
     std::string str((std::istreambuf_iterator<char>(t)),
                      std::istreambuf_iterator<char>());
