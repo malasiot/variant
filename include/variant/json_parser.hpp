@@ -44,7 +44,7 @@ private:
 };
 
 
-bool JSONParser::parse( Variant &value ) {
+inline bool JSONParser::parse( Variant &value ) {
     if ( !parseValue(value) ) {
         throwException("Error parsing json value") ;
         return false ;
@@ -52,7 +52,7 @@ bool JSONParser::parse( Variant &value ) {
     return true ;
 }
 
-bool JSONParser::parseValue(Variant &val) {
+inline bool JSONParser::parseValue(Variant &val) {
     return
             parseString(val) ||
             parseNumber(val) ||
@@ -62,7 +62,7 @@ bool JSONParser::parseValue(Variant &val) {
             parseNull(val) ;
 }
 
-bool JSONParser::parseString(Variant &val)
+inline bool JSONParser::parseString(Variant &val)
 {
     string res ;
 
@@ -113,7 +113,7 @@ bool JSONParser::parseString(Variant &val)
 
 
 
-bool JSONParser::parseName(Variant &val)
+inline bool JSONParser::parseName(Variant &val)
 {
     skipSpace() ;
 
@@ -138,7 +138,7 @@ bool JSONParser::parseName(Variant &val)
     return false ;
 }
 
-bool JSONParser::parseNumber(Variant &val) {
+inline bool JSONParser::parseNumber(Variant &val) {
     static regex rx_number(R"(^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)") ;
 
     skipSpace() ;
@@ -172,7 +172,7 @@ bool JSONParser::parseNumber(Variant &val) {
 
 }
 
-bool JSONParser::parseArray(Variant &val)
+inline bool JSONParser::parseArray(Variant &val)
 {
     Variant::Array elements ;
 
@@ -195,7 +195,7 @@ bool JSONParser::parseArray(Variant &val)
     return true ;
 }
 
-bool JSONParser::parseObject(Variant &val)
+inline bool JSONParser::parseObject(Variant &val)
 {
     Variant::Object elements ;
 
@@ -224,7 +224,7 @@ bool JSONParser::parseObject(Variant &val)
 
 }
 
-bool JSONParser::parseBoolean(Variant &val)
+inline bool JSONParser::parseBoolean(Variant &val)
 {
     if ( expect("true") ) {
         val = Variant(true) ;
@@ -239,7 +239,7 @@ bool JSONParser::parseBoolean(Variant &val)
 
 }
 
-bool JSONParser::parseNull(Variant &val)
+inline bool JSONParser::parseNull(Variant &val)
 {
     if ( expect("null") ) {
         val = Variant() ;
@@ -249,7 +249,7 @@ bool JSONParser::parseNull(Variant &val)
     return false ;
 }
 
-bool JSONParser::parseKeyValuePair(string &key, Variant &val) {
+inline bool JSONParser::parseKeyValuePair(string &key, Variant &val) {
     Variant keyv ;
     if ( !parseString(keyv) && !parseName(keyv) )
         return false ;
@@ -261,7 +261,7 @@ bool JSONParser::parseKeyValuePair(string &key, Variant &val) {
     return true ;
 }
 
-void JSONParser::skipSpace() {
+inline void JSONParser::skipSpace() {
     while ( cursor_ != end_ ) {
         char c = *cursor_ ;
         if ( isspace(c) ) ++cursor_ ;
@@ -269,7 +269,7 @@ void JSONParser::skipSpace() {
    }
 }
 
-bool JSONParser::expect(char c) {
+inline bool JSONParser::expect(char c) {
     if ( cursor_ != end_ ) {
         if ( *cursor_ == c ) {
             ++cursor_ ;
@@ -280,7 +280,7 @@ bool JSONParser::expect(char c) {
     return false ;
 }
 
-bool JSONParser::expect(const char *str)
+inline bool JSONParser::expect(const char *str)
 {
     const char *c = str ;
 
@@ -298,7 +298,7 @@ bool JSONParser::expect(const char *str)
 
 // adopted from https://github.com/open-source-parsers/jsoncpp
 
-bool JSONParser::decodeUnicode(uint &cp)
+inline bool JSONParser::decodeUnicode(uint &cp)
 {
     int unicode = 0 ;
 
@@ -320,14 +320,14 @@ bool JSONParser::decodeUnicode(uint &cp)
     return true;
 }
 
-bool JSONParser::throwException(const string msg)
+inline bool JSONParser::throwException(const string msg)
 {
     throw JSONParseException(msg) ;
 }
 
 /// Converts a unicode code-point to UTF-8.
 
-string JSONParser::unicodeToUTF8(unsigned int cp) {
+inline string JSONParser::unicodeToUTF8(unsigned int cp) {
     string result ;
 
     if ( cp <= 0x7f ) {
