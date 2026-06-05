@@ -582,6 +582,8 @@ public:
             strm << json_escape_string(toString()) ;
             break ;
         }
+        default:
+            break ;
         }
     }
 
