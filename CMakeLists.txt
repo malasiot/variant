@@ -22,8 +22,11 @@ if(VARIANT_BUILD_TESTS)
       googletest
       URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
     )
-    # Prevent GTest from overriding global compiler settings
+    
+    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+    set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL ON)
     FetchContent_MakeAvailable(googletest)
 
     add_executable(unit_tests 
