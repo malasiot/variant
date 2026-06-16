@@ -4,38 +4,27 @@ project(variant VERSION 1.0.0 LANGUAGES CXX)
 option(VARIANT_BUILD_TESTS "Build the testing suite" ON)
 
 add_library(variant INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(variant::variant ALIAS variant)
 
-target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
+target_compile_features(variant INTERFACE cxx_std_17)
 
-target_include_directories(${PROJECT_NAME} INTERFACE
+target_include_directories(variant INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 if(VARIANT_BUILD_TESTS)
-    include(CTest)
-    include(FetchContent)
+    find_package(GTest REQUIRED)
 
-    # Automatically fetch GoogleTest from GitHub
-    FetchContent_Declare(
-      googletest
-      URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-    )
+    enable_testing()
     
-    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-    set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL ON)
-    FetchContent_MakeAvailable(googletest)
-
     add_executable(unit_tests 
         test/test_variant.cpp
     )
-
+     
     target_link_libraries(unit_tests 
         PRIVATE 
-            ${PROJECT_NAME}::${PROJECT_NAME}
+            variant::variant
             GTest::gtest_main
     )
 
@@ -46,8 +35,8 @@ endif()
 
 include(GNUInstallDirs)
 
-install(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}Targets
+install(TARGETS variant
+    EXPORT variantTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
@@ -58,25 +47,22 @@ install(DIRECTORY include/
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/variantConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
-install(EXPORT ${PROJECT_NAME}Targets
-    FILE ${PROJECT_NAME}Targets.cmake
-    NAMESPACE ${PROJECT_NAME}::
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}
+install(EXPORT variantTargets
+    FILE variantTargets.cmake
+    NAMESPACE variant::
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/variant
 )
-
-configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/variantConfig.cmake"
+    "include(\"\${CMAKE_CURRENT_LIST_DIR}/variantTargets.cmake\")\n"
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}
+    "${CMAKE_CURRENT_BINARY_DIR}/variantConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/variantConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/variant
 )
